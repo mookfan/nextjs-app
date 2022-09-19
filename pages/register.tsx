@@ -1,15 +1,15 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import SignIn from '../components/sign_in';
+import SignUp from '../components/sign_up';
 
-const Home: NextPage = () => {
+const Register: NextPage = () => {
 
   return (
     <div>
-    <SignIn />
+    <SignUp />
     </div>
   )
 }
 
-export default Home;
+export default Register;
