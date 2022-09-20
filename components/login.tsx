@@ -1,89 +1,48 @@
 import Image from 'next/image';
-import {useState, useEffect} from "react";
-import {useRouter} from 'next/router'
+import { useState } from "react";
+import { useRouter } from 'next/router'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import { serverHost, checkUser, cookieTest } from '../pages/api/utils';
-import { parseCookies } from "../helpers/"
-import { useCookies } from 'react-cookie';
+import { serverHost, registerUser } from '../pages/api/utils';
 
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-export default function SignUp() {
+export default function SignIn() {
     
     const router = useRouter();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const admin = true;
 
     const body = {
         username,
         password,
-        admin,
     }
 
+    
     const handleSubmit = async (e: any) => {
-        const url = `${serverHost}${checkUser}`;
+        const url = `${serverHost}${registerUser}`;
         e.preventDefault();
-
-        console.log(body)
         try{
             const response = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(body),
+                body: new URLSearchParams(body),
                 credentials: 'include',
                 headers: {
                     "accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/x-www-form-urlencoded",
                 },
-                });
+                method: 'POST',
+                });           
             const data = await response.json();
             console.log(data)
             if (response.status != 200){
                 router.push('/')
                 toast(`${JSON.stringify(data['detail'])}`, { hideProgressBar: false, autoClose: 5000, type: 'error' })
             }else{
-                router.push('/index_')
+                router.push('/register')
                 toast('Success', { hideProgressBar: false, autoClose: 5000, type: 'success' })
             }
         } catch (err) {
             router.push('/')
             toast('Failed to fetch!', { hideProgressBar: false, autoClose: 5000, type: 'error' })
         }
-    
-    }
-
-    const handleClick = async (e: any) => {
-        const url = `${serverHost}${cookieTest}`;
-        const req_cookie = parseCookies()
-        // console.log("req::" + JSON.stringify(req));
-        const response = await fetch(url, {
-          method: 'GET',
-          credentials:'include',
-          headers: {
-            "accept": "application/json",
-            "Accept-Language": "en-US,en;q=0.9",
-            // "cookies": `access_token="${req_cookie['access_token']}"`
-            // Cookie: new URLSearchParams(req_cookie).toString(),
-          }
-        });
-        // console.log({Cookie: `access_token=Bearer ${req_cookie['access_token']};`})
-        const data = await response.json();
-        console.log(data)
     
     }
     
@@ -98,11 +57,11 @@ export default function SignUp() {
                 layout="fill" 
                 />
             </div>
-            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign up to your account</h2>
+            <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Or{' '}
-              <a href="/" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Login
+              <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Sign Up
               </a>
             </p>
           </div>
@@ -170,15 +129,7 @@ export default function SignUp() {
                     type="submit"
                     className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                    Register
-                  </button>
-                </div>
-                <div>
-                  <button
-                    className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={handleClick}
-                  >
-                    Cookie
+                    Sign in
                   </button>
                 </div>
               </form>

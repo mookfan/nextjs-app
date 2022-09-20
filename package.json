@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+
+    "env:dev": "dotenv -f .env.development -f .env.development.local", 
+    "env:prod": "dotenv -f .env.production.local ", 
+    "start:dev": "npm run env:dev run next dev",
+    "start:prod": "npm run env:prod run next dev"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.1",
